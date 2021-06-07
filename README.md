@@ -7,11 +7,13 @@ coin.
 
 ## Development
 
-Clone this repository and start the project, as follows:
+Clone this repository, setup the database and start the project, as follows:
 
 ```bash
 git clone https://github.com/mateusap1/nano-point-of-sale.git
+npx ts-node src/background/setup.ts
 yarn start
 ```
 
 ** Important: This assumes you have yarn installed
+
