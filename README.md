@@ -7,10 +7,16 @@ coin.
 
 ## Development
 
-Clone this repository, setup the database and start the project, as follows:
+* Clone this repository
+* Create a "db" folder
+* Setup the database
+* Start the project
+
+As follows,
 
 ```bash
 git clone https://github.com/mateusap1/nano-point-of-sale.git
+mkdir db # Or manually create a folder in Windows
 npx ts-node src/background/setup.ts
 yarn start
 ```
