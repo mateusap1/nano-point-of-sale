@@ -1,0 +1,16 @@
+.searchBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  input {
+    width: 80%;
+    font-size: 22px;
+    padding: 5px;
+  }
+
+  :last-child {
+    margin-left: 10px;
+    cursor: pointer;
+  }
+}

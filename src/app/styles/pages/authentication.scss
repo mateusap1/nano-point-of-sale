@@ -1,0 +1,52 @@
+.authContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+
+  div {
+    label {
+      text-align: center;
+    }
+
+    label {
+      color: var(--gray-600);
+      font-size: 22px;
+      display: block;
+      overflow-y: hidden;
+
+      div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+
+        textarea {
+          color: var(--gray-600);
+          font-size: 22px;
+          display: block;
+          overflow-y: hidden;
+          padding: 4px;
+          margin-left: 20px;
+          border-radius: 5px;
+          border: 1px solid;
+          resize: none;
+        }
+
+        button {
+          margin-left: 10px;
+          font-size: 22px;
+          padding: 10px;
+          border-radius: 10px;
+          background-color: var(--gray-600);
+          color: var(--gray-100);
+          border: 0;
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}

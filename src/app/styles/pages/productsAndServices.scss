@@ -1,0 +1,60 @@
+.overlayElement {
+  font-size: 22px;
+  color: var(--gray-600);
+  display: flex;
+  align-items: center;
+
+  label {
+    float: left;
+    margin-right: 15px;
+  }
+
+  span {
+    display: block;
+    overflow: hidden;
+    padding: 0 4px 0 6px;
+    width: 100%;
+
+    &:last-child {
+      margin-left: 15px;
+    }
+
+    input {
+      width: 100%;
+      color: var(--gray-600);
+      font-size: 22px;
+      padding: 5px;
+    }
+  }
+}
+
+.pasContent {
+  margin-left: 250px;
+  padding: 25px;
+
+  hr {
+    margin-top: 20px;
+  }
+
+  .buttonsContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: calc(33% - 75px);
+    margin-right: calc(33% - 75px);
+
+    button {
+      font-size: 22px;
+      padding: 10px;
+      width: 150px;
+      border-radius: 10px;
+      background-color: var(--gray-600);
+      color: var(--gray-100);
+      border: 0;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}

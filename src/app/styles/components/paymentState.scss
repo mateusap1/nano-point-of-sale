@@ -1,0 +1,48 @@
+.receiversContent {
+  display: flex;
+  flex-flow: wrap;
+  justify-content: center;
+  align-items: center;
+
+  hr {
+    width: 100%;
+    visibility: hidden;
+  }
+
+  .priceContent {
+    text-align: center;
+    padding: 10px;
+    color: var(--gray-600);
+
+    p {
+      font-size: 24px;
+    }
+
+    span:first-child {
+      font-size: 24px;
+    }
+
+    span:last-child:not(:only-child) {
+      font-size: 16px;
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 200px;
+      margin-top: 5px;
+    }
+  }
+
+  button {
+    font-size: 22px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--gray-600);
+    color: var(--gray-100);
+    border: 0;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
