@@ -100,6 +100,11 @@ interface Balance {
   today: string | null;
 }
 
+interface Config {
+  setting: string;
+  value: string;
+}
+
 interface InfoType {
   loading: boolean;
   settings: Settings;
@@ -180,10 +185,7 @@ export async function addConfig(
   );
 }
 
-export async function updateConfigs(
-  db: DatabaseType,
-  configs: Array<Dictionary>
-) {
+export async function updateConfigs(db: DatabaseType, configs: Array<Config>) {
   // Update the settings from the database
 
   for (let i = 0; i < configs.length; i += 1) {

@@ -51,7 +51,7 @@ interface WatchArgs {
 }
 
 interface SaveChangesArgs {
-  changes: Array<Dictionary>;
+  changes: Array<Config>;
 }
 
 interface Arguments {
@@ -69,8 +69,15 @@ interface Match {
   [key: string]: Array<string | null>;
 }
 
+interface Config {
+  setting: string;
+  value: string;
+}
+
 const nano = 10 ** 30;
 let socket: WebSocket;
+
+// InstanceOf functions
 
 function instanceOfAny(object: any, match: Match): boolean {
   if (typeof object !== 'object' || object === null) return false;
@@ -81,7 +88,7 @@ function instanceOfAny(object: any, match: Match): boolean {
     if (key === null) return false;
     if (!(key in object)) return false;
     if (!(object === null && match[key].includes(null))) {
-      if (!(typeof object[key] in match[key])) return false;
+      if (!match[key].includes(typeof object[key])) return false;
     }
   }
 
@@ -143,11 +150,16 @@ function instanceOfSaveChangesArgs(object: any): object is SaveChangesArgs {
   const keys = Object.keys(object);
   const values = Object.values(object);
 
-  if (keys !== ['changes']) return false;
+  if (keys.length === 0 || values.length === 0) return false;
+  if (keys[0] !== 'changes') return false;
   if (!Array.isArray(values[0])) return false;
 
+  const match: Match = { setting: ['string'], value: ['string'] };
+
+  instanceOfAny(object, match);
+
   for (let i = 0; i < values[0].length; i += 1) {
-    if (typeof values[0][i] !== 'object' || values[0][i] === null) return false;
+    if (!instanceOfAny(values[0][i], match)) return false;
   }
 
   return true;
@@ -193,8 +205,6 @@ async function updateInfo(db: DatabaseType): Promise<Error | void> {
 }
 
 async function handleWatch(db: DatabaseType, payload: unknown) {
-  console.log('Starting "handleWatch"');
-
   // Start watching for new txs
   if (!instanceOfWatchArgs(payload)) return;
 
@@ -205,7 +215,7 @@ async function handleWatch(db: DatabaseType, payload: unknown) {
     error(configs.message);
     return;
   }
-  console.log(JSON.stringify(configs));
+
   if (!Object.prototype.hasOwnProperty.call(configs, 'wssServer')) {
     error('No "wssServer" property');
     return;
@@ -219,8 +229,6 @@ async function handleWatch(db: DatabaseType, payload: unknown) {
   }
 
   socket = new WebSocket(wssServer);
-
-  console.log(socket);
 
   startWatch(db, socket, address, (data) => {
     socket.close();
@@ -309,18 +317,20 @@ function handleMessageFromMain(_: Electron.IpcRendererEvent, arg: Arguments) {
             // Stop watching for new txs
             socket.close();
           }
+
           break;
         }
         case 'save-changes': {
           // Update db if config changes
           if (!instanceOfSaveChangesArgs(payload)) break;
+
           const { changes } = payload;
           updateConfigs(db, changes);
 
           break;
         }
         default:
-          console.log('Hidden: Command not found!');
+          console.error('Hidden: Command not found!');
       }
 
       return null;
