@@ -25,8 +25,8 @@ export default function Settings() {
     }
 
     const rpcNodeC = rpcNodeRef.current;
-    const wssServerC = rpcNodeRef.current;
-    const currencyC = rpcNodeRef.current;
+    const wssServerC = wssServerRef.current;
+    const currencyC = currencyRef.current;
 
     if (rpcNodeC === null || wssServerC === null || currencyC === null) {
       return;
@@ -51,7 +51,9 @@ export default function Settings() {
           <div className={styles.container} id="rpcNode">
             <div className={styles.containerItem}>
               <label htmlFor="node-name">
-                RPC Node
+                <span>
+                  <b>RPC Node</b>
+                </span>
                 <input
                   name="node-name"
                   defaultValue={info.settings?.rpcNode}
@@ -62,7 +64,9 @@ export default function Settings() {
             <br />
             <div className={styles.containerItem} id="wssServer">
               <label htmlFor="wss-server">
-                WebSocket Server
+                <span>
+                  <b>WebSocket Server</b>
+                </span>
                 <input
                   name="wss-server"
                   defaultValue={info.settings?.wssServer}
@@ -73,7 +77,9 @@ export default function Settings() {
             <br />
             <div className={styles.containerItem} id="wssServer">
               <label htmlFor="currency">
-                Currency
+                <span>
+                  <b>Currency</b>
+                </span>
                 <select
                   name="currency"
                   defaultValue={info.settings?.currency}
@@ -87,7 +93,7 @@ export default function Settings() {
             <br />
             <div className={styles.bottom}>
               <button type="button" onClick={updateChanges}>
-                Save Changes
+                Save
               </button>
             </div>
           </div>

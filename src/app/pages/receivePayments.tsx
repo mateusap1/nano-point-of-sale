@@ -138,36 +138,41 @@ export default function ReceivePayments() {
   return (
     <>
       <Sidebar index={2} />
-      <LoadingWrapper loading={info.loading}>
-        <div style={{ marginLeft: '250px', padding: '50px' }}>
-          <SearchBar items={filteredItems} updateItems={setFilteredItems} />
+      <div style={{ marginLeft: '250px', padding: '25px' }}>
+        <LoadingWrapper loading={info.loading}>
+          <div>
+            <SearchBar
+              items={info?.prettyItems || []}
+              updateItems={setFilteredItems}
+            />
 
-          <EmptyWrapper isEmpty={filteredItems.length === 0}>
-            <RPItems
-              items={filteredItems}
-              itemsMap={itemsMap}
-              addNum={addNum}
-              subtractNum={subtractNum}
-            />
-          </EmptyWrapper>
-          <br />
-          <Wrapper condition={filteredItems.length !== 0}>
-            <PaymentState
-              state={receivingState.name}
-              tempAmount={{
-                currency: total,
-                nano: total / info.currentNanoPrice,
-              }}
-              receivedAmount={receivingState.receivedAmount}
-              waitingAmount={receivingState.waitingAmount}
-              waitForPayment={waitForPayment}
-              cancelWait={cancelWait}
-              restartState={restartState}
-            />
-            <></>
-          </Wrapper>
-        </div>
-      </LoadingWrapper>
+            <EmptyWrapper isEmpty={filteredItems.length === 0}>
+              <RPItems
+                items={filteredItems}
+                itemsMap={itemsMap}
+                addNum={addNum}
+                subtractNum={subtractNum}
+              />
+            </EmptyWrapper>
+            <br />
+            <Wrapper condition={filteredItems.length !== 0}>
+              <PaymentState
+                state={receivingState.name}
+                tempAmount={{
+                  currency: total,
+                  nano: total / info.currentNanoPrice,
+                }}
+                receivedAmount={receivingState.receivedAmount}
+                waitingAmount={receivingState.waitingAmount}
+                waitForPayment={waitForPayment}
+                cancelWait={cancelWait}
+                restartState={restartState}
+              />
+              <></>
+            </Wrapper>
+          </div>
+        </LoadingWrapper>
+      </div>
     </>
   );
 }

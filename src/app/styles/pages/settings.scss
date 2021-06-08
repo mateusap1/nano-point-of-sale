@@ -1,30 +1,39 @@
 .settings {
   margin-left: 250px;
-  padding: 50px 150px;
+  padding: 25px 150px;
   color: var(--gray-600);
 
   .container {
     .containerItem {
-      display: flex;
-      justify-content: space-between;
+      display: block;
 
       label {
-        font-size: 22px;
-      }
-
-      input {
         width: 100%;
-        height: 35px;
-      }
 
-      input,
-      select {
-        color: var(--gray-600);
-        font-size: 22px;
-        padding: 4px;
-        margin-left: 20px;
-        border-radius: 5px;
-        border: 1px solid;
+        span {
+          font-size: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        input {
+          width: 100%;
+          margin-top: 15px;
+          color: var(--gray-600);
+          font-size: 22px;
+          padding: 5px;
+        }
+
+        select {
+          width: 100%;
+          margin-top: 15px;
+          color: var(--gray-600);
+          font-size: 22px;
+          padding: 4px;
+          border-radius: 5px;
+          border: 1px solid;
+        }
       }
     }
 
@@ -33,7 +42,8 @@
       justify-content: center;
 
       button {
-        font-size: 22px;
+        font-size: 18px;
+        margin-top: 15px;
         padding: 10px;
         border-radius: 10px;
         background-color: var(--gray-600);
