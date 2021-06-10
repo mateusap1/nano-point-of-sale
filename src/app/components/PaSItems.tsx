@@ -88,28 +88,40 @@ export default function PaSItems({
                           <span>
                             <b>Description</b>
                           </span>
-                          <span>{item.description}</span>
+                          <span>
+                            {item.description ? (
+                              item.description
+                            ) : (
+                              <i>Unspecified</i>
+                            )}
+                          </span>
                         </div>
                         <br />
                         <div className={overlayStyles.overlayElement}>
                           <span>
                             <b>Barcode</b>
                           </span>
-                          <span>{item.barcode}</span>
+                          <span>
+                            {item.barcode ? item.barcode : <i>Unspecified</i>}
+                          </span>
                         </div>
                         <br />
                         <div className={overlayStyles.overlayElement}>
                           <span>
                             <b>Category</b>
                           </span>
-                          <span>{item.category}</span>
+                          <span>
+                            {item.category ? item.category : <i>Unspecified</i>}
+                          </span>
                         </div>
                         <br />
                         <div className={overlayStyles.overlayElement}>
                           <span>
                             <b>Extra</b>
                           </span>
-                          <span>{item.extra}</span>
+                          <span>
+                            {item.extra ? item.extra : <i>Unspecified</i>}
+                          </span>
                         </div>
                       </div>
                     </>
