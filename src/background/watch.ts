@@ -45,7 +45,12 @@ function ping(socket: WebSocket) {
     action: 'ping',
   };
 
-  socket.send(JSON.stringify(input));
+  if (
+    socket.readyState !== socket.CLOSED &&
+    socket.readyState !== socket.CLOSING
+  ) {
+    socket.send(JSON.stringify(input));
+  }
 }
 
 export default async function startWatch(
@@ -54,12 +59,12 @@ export default async function startWatch(
   address: string,
   callback: (data: SucceededData | Error) => void
 ) {
-  setInterval(function () {
+  const intervalId = setInterval(() => {
     ping(socket);
   }, 5000);
 
   // Called when WebSocket is opened successfully
-  socket.onopen = function () {
+  socket.onopen = () => {
     console.log('WebSocket is now open');
 
     unsubscribeAddresses(socket, []);
@@ -67,14 +72,14 @@ export default async function startWatch(
   };
 
   // Called when WebSocket fails to open
-  socket.onerror = function (error) {
+  socket.onerror = (error) => {
     console.error('Unable to set up WebSocket');
 
     callback(new Error(error.message));
   };
 
   // Called with each new inbound WebSocket message
-  socket.onmessage = function (response) {
+  socket.onmessage = (response) => {
     const { data } = response;
     if (!(typeof data === 'string')) return;
 
@@ -87,15 +92,18 @@ export default async function startWatch(
       const date = Math.floor(new Date().getTime() / 1000);
       const type = parsed.message.block.subtype;
 
-      console.log(JSON.stringify(parsed));
-
       if (type === 'send' || account !== address) return;
 
+      console.log(hash, account, amount, date, 1);
       insertTransaction(db, hash, account, amount, date, 1);
       callback({
         hash,
         amount,
       });
     }
+  };
+
+  socket.onclose = () => {
+    clearInterval(intervalId);
   };
 }
