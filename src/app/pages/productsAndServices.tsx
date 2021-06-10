@@ -130,11 +130,11 @@ export default function ProductsAndServices() {
       extraRef,
     ]);
 
-    if (![id, name, price].some((x) => x === null)) {
+    if (id !== null && name !== null && price !== null) {
       const prettyItemsDict: PrettyItem = {
-        id: id!,
-        name: name!,
-        price: parseFloat(price!).toLocaleString(undefined, {
+        id,
+        name,
+        price: parseFloat(price).toLocaleString(undefined, {
           minimumFractionDigits: 2,
           minimumIntegerDigits: 2,
         }),
@@ -145,9 +145,9 @@ export default function ProductsAndServices() {
       };
 
       const rawItemsDict = {
-        id: Number(id!),
-        name: name!,
-        price: Number(price!),
+        id: Number(id),
+        name,
+        price: Number(price),
         description,
         barcode,
         category,
