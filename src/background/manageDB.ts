@@ -446,11 +446,10 @@ export async function getInfo(
 
     if (convertedAmount !== 0) {
       // Exact transaction amount in the user's currency
-      const price: number = nanoPrice * convertedAmount;
+      const price = nanoPrice * (amount / 10 ** 30);
 
       // Transaction amount rounded two decimal digitals
-      const roundPrice: number =
-        Math.round((price + Number.EPSILON) * 100) / 100;
+      const roundPrice = Math.round((price + Number.EPSILON) * 100) / 100;
 
       // Transaction amount in a nicely formatted way
       const parsedPrice = `${roundPrice.toLocaleString(undefined, {
