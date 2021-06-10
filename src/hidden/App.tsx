@@ -87,15 +87,18 @@ function instanceOfAny(object: any, match: Match): boolean {
 
     if (key === null) return false;
     if (!(key in object)) return false;
-    if (!(object === null && match[key].includes(null))) {
-      if (!match[key].includes(typeof object[key])) return false;
+
+    if (!(object[key] === null && match[key].includes(null))) {
+      if (!match[key].includes(typeof object[key])) {
+        return false;
+      }
     }
   }
 
   return true;
 }
 
-function instanceOfImportCsvArgs(object: any): object is ImportCsvArgs {
+function instanceOfImportCsvArgs(object: unknown): object is ImportCsvArgs {
   if (typeof object !== 'object' || object === null) return false;
 
   const match: Match = { csvPath: ['string'] };
@@ -103,14 +106,14 @@ function instanceOfImportCsvArgs(object: any): object is ImportCsvArgs {
   return instanceOfAny(object, match);
 }
 
-function instanceRawItem(object: any): object is RawItem {
+function instanceRawItem(object: unknown): object is RawItem {
   if (typeof object !== 'object' || object === null) return false;
 
   const match: Match = {
-    id: ['number', null],
-    name: ['string', null],
+    id: ['number'],
+    name: ['string'],
     description: ['string', null],
-    price: ['number', null],
+    price: ['number'],
     barcode: ['string', null],
     category: ['string', null],
     extra: ['string', null],
@@ -119,7 +122,7 @@ function instanceRawItem(object: any): object is RawItem {
   return instanceOfAny(object, match);
 }
 
-function instanceOfDeleteItemArgs(object: any): object is DeleteItemArgs {
+function instanceOfDeleteItemArgs(object: unknown): object is DeleteItemArgs {
   if (typeof object !== 'object' || object === null) return false;
 
   const match: Match = { id: ['number'] };
@@ -127,7 +130,7 @@ function instanceOfDeleteItemArgs(object: any): object is DeleteItemArgs {
   return instanceOfAny(object, match);
 }
 
-function instanceOfWatchArgs(object: any): object is WatchArgs {
+function instanceOfWatchArgs(object: unknown): object is WatchArgs {
   if (typeof object !== 'object' || object === null) return false;
 
   const keys = Object.keys(object);
@@ -144,7 +147,7 @@ function instanceOfWatchArgs(object: any): object is WatchArgs {
   return true;
 }
 
-function instanceOfSaveChangesArgs(object: any): object is SaveChangesArgs {
+function instanceOfSaveChangesArgs(object: unknown): object is SaveChangesArgs {
   if (typeof object !== 'object' || object === null) return false;
 
   const keys = Object.keys(object);
@@ -165,8 +168,9 @@ function instanceOfSaveChangesArgs(object: any): object is SaveChangesArgs {
   return true;
 }
 
-// Send message to main renderer
 function message2UI(command: string, payload: unknown): void {
+  // Send message to main renderer
+
   ipcRenderer.invoke('message-from-worker', {
     command,
     payload,
@@ -179,29 +183,31 @@ function error(message: string): void {
   ipcRenderer.invoke('renderer-error', { message });
 }
 
-async function updateInfo(db: DatabaseType): Promise<Error | void> {
+async function updateInfo(db: DatabaseType): Promise<Error | null> {
   // Synchronize transactions and update data stored
 
   message2UI('set-loading', { value: true });
 
   const address = localStorage.getItem('address');
   if (!address) {
-    return;
+    return null;
   }
 
   await syncTransactions(db, address);
-  getInfo(db, address)
-    .then((info) => {
-      message2UI('update-info', {
-        updatedInfo: info,
-      });
+  return new Promise((resolve, reject) => {
+    getInfo(db, address)
+      .then((info) => {
+        message2UI('update-info', {
+          updatedInfo: info,
+        });
 
-      return null;
-    })
-    .catch((e) => {
-      error('Program crashed, try restarting it');
-      return new Promise((resolve, reject) => reject(e));
-    });
+        return resolve(null);
+      })
+      .catch((e) => {
+        error('Program crashed, try restarting it');
+        return reject(e);
+      });
+  });
 }
 
 async function handleWatch(db: DatabaseType, payload: unknown) {
@@ -231,15 +237,19 @@ async function handleWatch(db: DatabaseType, payload: unknown) {
   socket = new WebSocket(wssServer);
 
   startWatch(db, socket, address, (data) => {
-    socket.close();
+    if (socket.readyState === socket.OPEN) {
+      socket.close();
+    }
 
     if (!(data instanceof Error)) {
       message2UI('receive-payment', {
         amount: data.amount / nano,
       });
+
       insertBill(db, data.hash, itemsId);
     } else {
       error(data.message);
+
       message2UI('cancel-payment', {});
     }
   });
@@ -294,7 +304,7 @@ function handleMessageFromMain(_: Electron.IpcRendererEvent, arg: Arguments) {
             price,
             extra
           );
-          updateInfo(db);
+          // updateInfo(db);
           break;
         }
         case 'delete-item': {
@@ -313,8 +323,7 @@ function handleMessageFromMain(_: Electron.IpcRendererEvent, arg: Arguments) {
           break;
         }
         case 'stop-watch': {
-          if (socket) {
-            // Stop watching for new txs
+          if (socket.readyState === socket.OPEN) {
             socket.close();
           }
 
