@@ -70,7 +70,7 @@ export default function PaymentState({
         <div className={styles.priceContent}>
           <span>{parseNum(tempAmount.currency)}$</span>
           <br />
-          <span>{parseNum(tempAmount.nano)} Nano</span>
+          <span>{parseNum(tempAmount.nano, 4)} Nano</span>
         </div>
         <hr />
         <button type="button" onClick={waitForPayment}>
