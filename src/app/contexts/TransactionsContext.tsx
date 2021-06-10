@@ -183,8 +183,8 @@ export function TransactionsContextProvider({
         tempRcvState.receivedAmount = amount;
 
         if (receivingState.waitingAmount === null) {
-          error('Payment received unexpectedly');
-        } else if (amount + threshold >= tempRcvState.waitingAmount!) {
+          error('Unexpected Payment');
+        } else if (amount + threshold >= receivingState.waitingAmount) {
           tempRcvState.name = 'received';
         } else {
           tempRcvState.name = 'fail';
