@@ -54,6 +54,10 @@ interface SaveChangesArgs {
   changes: Array<Config>;
 }
 
+interface UpdateInfoArgs {
+  sync: boolean;
+}
+
 interface Arguments {
   command: string;
   payload:
@@ -62,7 +66,8 @@ interface Arguments {
     | DeleteItemArgs
     | WatchArgs
     | SaveChangesArgs
-    | Error;
+    | Error
+    | UpdateInfoArgs;
 }
 
 interface Match {
@@ -168,6 +173,14 @@ function instanceOfSaveChangesArgs(object: unknown): object is SaveChangesArgs {
   return true;
 }
 
+function instanceOfUpdateInfoArgs(object: unknown): object is UpdateInfoArgs {
+  if (typeof object !== 'object' || object === null) return false;
+
+  const match: Match = { sync: ['boolean'] };
+
+  return instanceOfAny(object, match);
+}
+
 function message2UI(command: string, payload: unknown): void {
   // Send message to main renderer
 
@@ -183,7 +196,10 @@ function error(message: string): void {
   ipcRenderer.invoke('renderer-error', { message });
 }
 
-async function updateInfo(db: DatabaseType): Promise<Error | null> {
+async function updateInfo(
+  db: DatabaseType,
+  sync: boolean
+): Promise<Error | null> {
   // Synchronize transactions and update data stored
 
   message2UI('set-loading', { value: true });
@@ -193,7 +209,10 @@ async function updateInfo(db: DatabaseType): Promise<Error | null> {
     return null;
   }
 
-  await syncTransactions(db, address);
+  if (sync) {
+    await syncTransactions(db, address);
+  }
+
   return new Promise((resolve, reject) => {
     getInfo(db, address)
       .then((info) => {
@@ -238,6 +257,7 @@ async function handleWatch(db: DatabaseType, payload: unknown) {
 
   startWatch(db, socket, address, (data) => {
     if (socket.readyState === socket.OPEN) {
+      console.log('Closing WebSocket...');
       socket.close();
     }
 
@@ -268,7 +288,11 @@ function handleMessageFromMain(_: Electron.IpcRendererEvent, arg: Arguments) {
       switch (command) {
         case 'update-info': {
           // Sync and update data
-          updateInfo(db);
+          if (!instanceOfUpdateInfoArgs(payload)) break;
+
+          const { sync } = payload;
+
+          updateInfo(db, sync);
           break;
         }
         case 'import-csv': {
@@ -314,7 +338,7 @@ function handleMessageFromMain(_: Electron.IpcRendererEvent, arg: Arguments) {
           const dId = payload.id;
 
           deleteItem(db, dId);
-          updateInfo(db);
+          updateInfo(db, false);
           break;
         }
         case 'watch': {
@@ -324,6 +348,7 @@ function handleMessageFromMain(_: Electron.IpcRendererEvent, arg: Arguments) {
         }
         case 'stop-watch': {
           if (socket.readyState === socket.OPEN) {
+            console.log('Closing WebSocket...');
             socket.close();
           }
 
