@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { AiFillInfoCircle } from 'react-icons/ai';
+import Wrapper from './Wrapper';
 import styles from '../styles/components/details.scss';
 
 interface Item {
@@ -23,7 +24,7 @@ interface ItemDetails extends RawItem {
 }
 
 interface Props {
-  details: Array<ItemDetails>;
+  details: Array<ItemDetails> | null;
   setOverlayContent: (element: JSX.Element) => void;
   setOverlayState: (state: string) => void;
 }
@@ -34,34 +35,42 @@ export default function Details({
   setOverlayState,
 }: Props): JSX.Element {
   return (
-    <AiFillInfoCircle
-      size="32px"
-      color="#457b9d"
-      onClick={() => {
-        setOverlayContent(
-          <>
-            {details.map((item) => (
-              <table key={item.id} className={styles.details}>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Amount</th>
-                    <th>Price</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{item.name}</td>
-                    <td>{item.amount}</td>
-                    <td>{item.price * item.amount}</td>
-                  </tr>
-                </tbody>
-              </table>
-            ))}
-          </>
-        );
-        setOverlayState('get-info');
-      }}
-    />
+    <Wrapper condition={!!details}>
+      <AiFillInfoCircle
+        size="32px"
+        color="#457b9d"
+        className={styles.activated}
+        onClick={() => {
+          setOverlayContent(
+            <>
+              {details!.map((item) => (
+                <table key={item.id} className={styles.details}>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Amount</th>
+                      <th>Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{item.name}</td>
+                      <td>{item.amount}</td>
+                      <td>{item.price * item.amount}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              ))}
+            </>
+          );
+          setOverlayState('get-info');
+        }}
+      />
+      <AiFillInfoCircle
+        size="32px"
+        color="#808080"
+        className={styles.deactivated}
+      />
+    </Wrapper>
   );
 }

@@ -68,3 +68,13 @@
     }
   }
 }
+
+.activated {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.deactivated {
+  opacity: 0.6;
+}
