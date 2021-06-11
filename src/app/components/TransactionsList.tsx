@@ -1,6 +1,5 @@
 import React from 'react';
 
-import Wrapper from './Wrapper';
 import Details from './Details';
 
 import styles from '../styles/components/transactionsList.scss';
@@ -88,16 +87,13 @@ export default function TransactionsList({
             <td>
               <span>{transaction.type}</span>
             </td>
-            <Wrapper condition={raw[index].details !== null}>
-              <td className={styles.iconContainer}>
-                <Details
-                  details={raw[index].details!}
-                  setOverlayContent={setOverlayContent}
-                  setOverlayState={setOverlayState}
-                />
-              </td>
-              <></>
-            </Wrapper>
+            <td>
+              <Details
+                details={raw[index].details}
+                setOverlayContent={setOverlayContent}
+                setOverlayState={setOverlayState}
+              />
+            </td>
           </tr>
         ))}
       </tbody>
