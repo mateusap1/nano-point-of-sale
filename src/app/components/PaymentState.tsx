@@ -31,11 +31,7 @@ export default function PaymentState({
   restartState,
 }: Props) {
   const [waitingAmountStr, setWaitingAmountStr] = useState(
-    parseNum(waitingAmount || 0)
-  );
-
-  const [receivedAmountStr, setReceivedAmountStr] = useState(
-    parseNum(receivedAmount || 0)
+    parseNum(waitingAmount || 0, 4)
   );
 
   const [exceed, setExceed] = useState(
@@ -46,23 +42,13 @@ export default function PaymentState({
 
   useEffect(() => {
     if (waitingAmount !== null) {
-      setWaitingAmountStr(parseNum(waitingAmount));
+      setWaitingAmountStr(parseNum(waitingAmount, 4));
 
       if (receivedAmount !== null) {
         setExceed(receivedAmount - waitingAmount);
       }
     }
-  }, [waitingAmount]);
-
-  useEffect(() => {
-    if (receivedAmount !== null) {
-      setReceivedAmountStr(parseNum(receivedAmount));
-
-      if (waitingAmount !== null) {
-        setExceed(receivedAmount - waitingAmount);
-      }
-    }
-  }, [receivedAmount]);
+  }, [receivedAmount, waitingAmount]);
 
   if (state === 'default') {
     return (
@@ -94,11 +80,6 @@ export default function PaymentState({
         <hr />
         <button type="button" onClick={cancelWait}>
           Cancel
-        </button>
-
-        {/* TODO: Add bill when user click in this button */}
-        <button type="button" onClick={cancelWait}>
-          Received
         </button>
       </div>
     );
