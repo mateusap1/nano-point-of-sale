@@ -25,5 +25,11 @@
     "yarn.lock": true,
     "*.{css,sass,scss}.d.ts": true
   },
-  "cSpell.ignoreWords": ["browserslist", "prettierrc", "ts", "xmlhttprequest"]
+  "cSpell.ignoreWords": [
+    "browserslist",
+    "nanos",
+    "prettierrc",
+    "ts",
+    "xmlhttprequest"
+  ]
 }
