@@ -485,12 +485,6 @@ export async function getInfo(
         details: details.length > 0 ? details : null,
       });
 
-      if (type === 1) {
-        balanceTotal += amount;
-      } else {
-        balanceTotal -= amount;
-      }
-
       if (
         new Date(date * 1000).setHours(0, 0, 0, 0) ===
           new Date().setHours(0, 0, 0, 0) &&
@@ -498,6 +492,12 @@ export async function getInfo(
       ) {
         balanceToday += amount;
       }
+    }
+
+    if (type === 1) {
+      balanceTotal += amount;
+    } else {
+      balanceTotal -= amount;
     }
   }
 
