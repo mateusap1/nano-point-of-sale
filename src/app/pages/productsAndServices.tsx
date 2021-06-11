@@ -12,6 +12,7 @@ import styles from '../styles/pages/productsAndServices.scss';
 
 import { useTransactions } from '../contexts/TransactionsContext';
 import message2Background from '../../utils/messageToBackground';
+import updateInfo from '../../utils/updateInfo';
 
 const { ipcRenderer } = electron;
 
@@ -155,7 +156,7 @@ export default function ProductsAndServices() {
       };
 
       message2Background('insert-item', rawItemsDict);
-      message2Background('update-info', {});
+      updateInfo(false);
       resetInputs();
       setOverlayState('deactivated');
 

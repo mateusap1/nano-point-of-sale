@@ -6,6 +6,7 @@ import { useTransactions } from '../contexts/TransactionsContext';
 import message2Background from '../../utils/messageToBackground';
 
 import styles from '../styles/pages/settings.scss';
+import updateInfo from '../../utils/updateInfo';
 
 type PossibleInputRef = React.MutableRefObject<HTMLInputElement | null>;
 type PossibleSelectRef = React.MutableRefObject<HTMLSelectElement | null>;
@@ -40,7 +41,7 @@ export default function Settings() {
       ],
     });
 
-    message2Background('update-info', {});
+    updateInfo(false);
   }
 
   return (

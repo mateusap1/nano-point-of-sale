@@ -4,6 +4,7 @@ import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import { TransactionsContextProvider } from './contexts/TransactionsContext';
 import message2Background from '../utils/messageToBackground';
+import updateInfo from '../utils/updateInfo';
 
 import Authentication from './pages/authentication';
 import Transactions from './pages/transactions';
@@ -15,7 +16,7 @@ import './App.scss';
 
 export default function App() {
   useEffect(() => {
-    message2Background('update-info', {});
+    updateInfo(true);
   }, []);
 
   return (

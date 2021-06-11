@@ -9,6 +9,7 @@ import PaymentState from '../components/PaymentState';
 import Sidebar from '../components/Sidebar';
 import { useTransactions } from '../contexts/TransactionsContext';
 import message2Background from '../../utils/messageToBackground';
+import updateInfo from '../../utils/updateInfo';
 
 export default function ReceivePayments() {
   const context = useTransactions();
@@ -27,7 +28,7 @@ export default function ReceivePayments() {
   );
 
   const [total, setTotal] = useState(0);
-  const [tip, setTip] = useState('');
+  const [tip, setTip] = useState(''); // TODO: Use this
 
   useEffect(() => {
     setFilteredItems(info?.prettyItems || []);
@@ -45,8 +46,8 @@ export default function ReceivePayments() {
   useEffect(() => {
     const { receivedAmount, waitingAmount } = receivingState;
 
-    if (![receivedAmount, waitingAmount].includes(null)) {
-      const tipValue = receivedAmount! - waitingAmount!;
+    if (receivedAmount !== null && waitingAmount !== null) {
+      const tipValue = receivedAmount - waitingAmount;
 
       setTip(
         tipValue.toLocaleString(undefined, {
@@ -116,11 +117,10 @@ export default function ReceivePayments() {
         name: 'waiting',
         waitingAmount: Number(
           (total / info.currentNanoPrice).toLocaleString(undefined, {
-            minimumFractionDigits: 2,
+            minimumFractionDigits: 4,
           })
         ),
       });
-
       message2Background('watch', { itemsId: ids });
     }
   }
@@ -132,7 +132,7 @@ export default function ReceivePayments() {
       receivedAmount: null,
     });
 
-    message2Background('update-info', {});
+    updateInfo(true);
   }
 
   return (

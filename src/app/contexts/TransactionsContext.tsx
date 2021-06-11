@@ -1,13 +1,7 @@
 import { ipcRenderer } from 'electron';
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useEffect,
-  useCallback,
-} from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
-import message2Background from '../../utils/messageToBackground';
+import updateInfo from '../../utils/updateInfo';
 
 export const TransactionsContext = createContext({});
 
@@ -147,10 +141,6 @@ export function TransactionsContextProvider({
 
   const [info, setInfo] = useState<InfoType>(initializeInfo());
 
-  function updateInfo(): void {
-    message2Background('update-info', {});
-  }
-
   function changeInfo(infoC: InfoType): void {
     setInfo(infoC);
     localStorage.setItem('info', JSON.stringify(infoC));
@@ -160,7 +150,7 @@ export function TransactionsContextProvider({
     ipcRenderer.invoke('renderer-error', { message });
   }
 
-  const messageHandler = useCallback((_: any, arg: MessageArg) => {
+  const messageHandler = (_: Electron.IpcRendererEvent, arg: MessageArg) => {
     const { command } = arg;
     const { payload } = arg;
 
@@ -218,13 +208,13 @@ export function TransactionsContextProvider({
         console.error('Command not found!');
       }
     }
-  }, []);
+  };
 
   useEffect(() => {
     return () => {
       ipcRenderer.removeListener('message-from-worker', messageHandler);
     };
-  }, [messageHandler]);
+  });
 
   ipcRenderer.on('message-from-worker', messageHandler);
 
