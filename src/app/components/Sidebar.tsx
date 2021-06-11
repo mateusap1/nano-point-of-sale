@@ -65,7 +65,7 @@ export default function Sidebar({ index }: Props) {
         </li>
       </ul>
       <div className={styles.footer}>
-        {Number(info.currentNanoPrice?.toFixed(2)) ? (
+        {Number(info.currentNanoPrice?.toFixed(2)) && !info.loading ? (
           <p>
             ${Number(info.currentNanoPrice?.toFixed(2))}{' '}
             {info.settings.currency.toUpperCase()} / NANO
