@@ -5,6 +5,10 @@ companies that want to accept Nano as a form of payment. This project aim is not
 only to facilitate this process, but also to stimulate practical uses of the
 coin.
 
+The project is still in a development phase, so there are no user-friendly
+releases yet, but if you want to test the app or help in the development,
+you can follow the next steps.
+
 ## Development
 
 * Clone this repository
