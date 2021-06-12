@@ -27,9 +27,9 @@ export default function App() {
             from="/"
             exact
             to={
-              localStorage.getItem('address') === null
-                ? '/authentication'
-                : '/transactions'
+              localStorage.getItem('address')
+                ? '/transactions'
+                : '/authentication'
             }
           />
           <Route path="/authentication" exact component={Authentication} />
