@@ -27,3 +27,6 @@ yarn start
 
 ** Important: This assumes you have yarn installed
 
+The first initialization may take a while, as the app will be synchronizing your
+transactions, but future initializations will be quicker.
+
