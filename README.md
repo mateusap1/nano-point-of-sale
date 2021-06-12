@@ -20,6 +20,7 @@ As follows,
 
 ```bash
 git clone https://github.com/mateusap1/nano-point-of-sale.git
+cd nano-point-of-sale # Or manually access the folder
 mkdir db # Or manually create a folder in Windows
 npx ts-node src/background/setup.ts
 yarn start
